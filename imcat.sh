@@ -4,7 +4,14 @@
 dir="-append"
 
 # Output file
-outfile="$HOME/Pictures/screen$(date '+%Y%m%d%H%M%S').png"
+# Use Mac OS screen capture preferences by default
+name=$(defaults read com.apple.screencapture name 2>/dev/null)
+name=${name:-"Screen Shot"}
+location=$(defaults read com.apple.screencapture location 2>/dev/null)
+location=${location:-"$HOME/Desktop"}
+type=$(defaults read com.apple.screencapture type 2>/dev/null)
+type=${type:-"png"}
+outfile="${location}/${name} $(date '+%Y-%m-%d at %H.%M.%S').${type}"
 
 # Get Options
 while getopts ":VHg:b:o:p:" OPTION; do
