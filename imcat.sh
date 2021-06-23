@@ -14,7 +14,7 @@ type=${type:-"png"}
 outfile="${location}/${name} $(date '+%Y-%m-%d at %H.%M.%S').${type}"
 
 # Get Options
-while getopts ":VHg:b:o:p:" OPTION; do
+while getopts ":fVHg:b:o:p:" OPTION; do
   case $OPTION in
     o) outfile=$OPTARG;;
     :) exit 1;;
@@ -62,6 +62,11 @@ if [[ ! "$OPT_V" == "" ]]; then
   if [[ -n "$OPT_p" ]]; then
     splice="-splice 0x${OPT_p}+0+0"
     chop="-chop 0x${OPT_p}+0+0"
+
+    # Set frame
+    if [[ ! "$OPT_f" == "" ]]; then
+        frame="-bordercolor ${bg_color} -border ${OPT_p}"
+    fi
   fi
 fi
 
@@ -85,8 +90,13 @@ if [[ ! "$OPT_H" == "" ]]; then
   if [[ -n "$OPT_p" ]]; then
     splice="-splice ${OPT_p}x0+0+0"
     chop="-chop ${OPT_p}x0+0+0"
+
+    # Set frame
+    if [[ ! "$OPT_f" == "" ]]; then
+        frame="-bordercolor ${bg_color} -border ${OPT_p}"
+    fi
   fi
 fi
 
 # Concatenate images
-convert "$@" $background $splice $gravity $dir $chop "$outfile"
+convert "$@" $background $splice $gravity $dir $chop $frame "$outfile"
